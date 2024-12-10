@@ -331,3 +331,34 @@ button {
     100% { transform: rotate(360deg); }
 }
 
+/* Mobile Styles */
+@media (max-width: 600px) {
+    .payment-container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .options {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .summary p, .summary h2, .payment-options h2 {
+        font-size: 16px;
+    }
+
+    .payment-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    #qr-code-section img {
+        width: 80%;
+    }
+
+    .button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
