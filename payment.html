@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="payment-container">
+        <div class="header">
+            <h1>Complete Your Payment</h1>
+        </div>
+        <div class="summary">
+            <h2>Order Summary</h2>
+            <div id="cart-summary"></div>
+            <p><strong>Total:</strong> <span id="total-cost">0.00</span></p>
+
+        </div>
+        <div class="payment-options">
+            <h2>Choose Payment Method</h2>
+            <div class="options">
+                <button id="pay-cash" class="payment-button">Pay with Cash</button>
+                <button id="pay-gpay" class="payment-button">Pay with GPay</button>
+            </div>
+        </div>
+        <div id="qr-code-section" class="hidden">
+            <h2>Scan to Pay with GPay</h2>
+            <img id="qr-code" alt="QR Code for GPay" />
+            <p>Open GPay, scan this code, and complete your payment.</p>
+            <button id="payment-done" class="button">Payment Done</button>
+        </div>
+        <div id="payment-processing" class="hidden">
+            <h2>Processing your payment...</h2>
+            <p>Please wait while we confirm your payment.</p>
+            <div class="spinner"></div> <!-- Add loading spinner here -->
+        </div>
+        <div id="confirmation-message" class="confirmation hidden">
+            <h2>Thank you for your payment!</h2>
+            <p>Your items are being prepared for dispatch.</p>
+            <button id="exit-button" class="button">Exit</button>
+        </div>
+    </div>
+
+    <script>
+        // Retrieve checkout data from localStorage
+        const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+
+        // Select relevant DOM elements
+        const cartSummary = document.getElementById('cart-summary');
+        const totalCostEl = document.getElementById('total-cost');
+        const confirmationMessage = document.getElementById('confirmation-message');
+        const paymentButtons = document.querySelectorAll('.payment-button');
+        const exitButton = document.getElementById('exit-button');
+        const qrCodeSection = document.getElementById('qr-code-section');
+        const qrCodeEl = document.getElementById('qr-code');
+        const paymentProcessing = document.getElementById('payment-processing');
+        const paymentDoneButton = document.getElementById('payment-done');
+
+        // Display cart summary and total cost if checkout data exists
+        if (checkoutData) {
+            checkoutData.cart.forEach(item => {
+                const itemEl = document.createElement('p');
+                itemEl.textContent = `${item.product.name} x${item.quantity} - ${(item.product.price * item.quantity).toFixed(2)}`;
+                cartSummary.appendChild(itemEl);
+            });
+        
+            totalCostEl.textContent = checkoutData.totalCost.toFixed(2);
+
+        } else {
+            cartSummary.textContent = "No items in your cart.";
+        }
+        
+
+        // Handle payment method selection
+        paymentButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Show payment processing screen
+                paymentProcessing.classList.remove('hidden');
+                qrCodeSection.classList.add('hidden');
+                confirmationMessage.classList.add('hidden');
+                cartSummary.classList.add('hidden');
+                document.querySelector('.payment-options').classList.add('hidden');
+
+                if (button.id === 'pay-gpay') {
+                    // Simulate payment processing delay (e.g., 3 seconds)
+                    setTimeout(() => {
+                        // Simulate successful payment processing
+                        paymentProcessing.classList.add('hidden');
+                        qrCodeSection.classList.remove('hidden');
+                        qrCodeEl.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/QR_Code_Example.svg/1200px-QR_Code_Example.svg.png"; // Replace with actual QR code URL
+                    }, 3000); // Simulate a 3-second delay before showing QR code
+                } else if (button.id === 'pay-cash') {
+                    // Show confirmation immediately for Cash
+                    setTimeout(() => {
+                        paymentProcessing.classList.add('hidden');
+                        confirmationMessage.classList.remove('hidden');
+                    }, 3000);
+                }
+            });
+        });
+
+        // Payment Done Button functionality
+        paymentDoneButton.addEventListener('click', () => {
+            // Simulate payment completion
+            paymentProcessing.classList.remove('hidden');
+            qrCodeSection.classList.add('hidden');
+            
+            // Simulate a delay for payment processing
+            setTimeout(() => {
+                paymentProcessing.classList.add('hidden');
+                confirmationMessage.classList.remove('hidden');
+            }, 3000);
+        });
+
+        // Exit button functionality
+        exitButton.addEventListener('click', () => {
+            // Clear localStorage and redirect to home page
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+    </script>
+</body>
+</html>
